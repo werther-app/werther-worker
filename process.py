@@ -1,0 +1,2 @@
+def process(link):
+    return []
