@@ -14,8 +14,6 @@ if __name__ == '__main__':
     order_ip = config('ORDER_SERVER_IP')
     order_port = config('ORDER_SERVER_PORT')
 
-    test()
-
     id = auth(auth_ip, auth_port)
     server = connect(order_ip, order_port)
     login(server, id)
