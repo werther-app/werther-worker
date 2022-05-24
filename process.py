@@ -1,2 +1,2 @@
 def process(link):
-    return []
+    return ['docker']
