@@ -15,7 +15,7 @@ class Auth:
 
     def auth(self, read=True):
         if read == False:
-            self.get_id()
+            return self.get_id()
         id = self.read_id()
         if id == None:
             self.get_id()

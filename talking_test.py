@@ -50,3 +50,11 @@ class TestTalking:
             id = auth.auth()
         assert isinstance(id, str) and len(id) != 0
         os.remove(file)
+
+    def test_auth_no_read_file(self):
+        file = config("ID_FILE")
+        ip = config("AUTH_SERVER_IP")
+        port = config("AUTH_SERVER_PORT")
+        auth = Auth(ip, port, file)
+        id = auth.auth(False)
+        assert isinstance(id, str) and len(id) != 0
