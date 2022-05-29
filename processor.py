@@ -1,5 +1,7 @@
 from calendar import c
 import re
+
+from numpy import double
 from downloaders.downloader import Downloader
 from downloaders.youtube_dl import YoutubeDownloader
 from decouple import config
@@ -26,7 +28,7 @@ class Processor:
         WINDOW_CASCADE = config('WINDOW_CASCADE')
 
         # Cascade parameters
-        SCALE_FACTOR = int(config('SCALE_FACTOR'))
+        SCALE_FACTOR = double(config('SCALE_FACTOR'))
         MIN_NEIGHBORS = int(config('MIN_NEIGHBORS'))
         FLAGS = int(config('FLAGS'))
         MIN_SIZE_W = int(config('MIN_SIZE_W'))
