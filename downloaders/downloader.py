@@ -1,3 +1,3 @@
 class Downloader:
-    def download(link, output) -> None:
+    def download(self, link, filename) -> None:
         pass

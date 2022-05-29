@@ -5,7 +5,7 @@ from downloaders.downloader import Downloader
 
 
 class YoutubeDownloader(Downloader):
-    def download(link, filename) -> None:
+    def download(self, link, filename) -> None:
         if not os.path.isdir("video"):
             os.mkdir("video")
         save_path = "video/"
