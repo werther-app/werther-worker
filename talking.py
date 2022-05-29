@@ -1,10 +1,11 @@
 from datetime import datetime
 import os
 import socket
+from time import sleep
 import requests
 import json
 
-from process import process
+from processor import Processor
 
 
 class Auth:
@@ -43,9 +44,14 @@ class Auth:
 
     # method to request id from authentication server
     def request_id(self):
-        response = requests.get('http://' + self.ip + ':' +
-                                str(self.port) + '/auth?type=worker')
-        id = response.text
+        try:
+            response = requests.get('http://' + self.ip + ':' +
+                                    str(self.port) + '/auth?type=worker')
+            id = response.text
+        except:
+            print('Cannot auth, no response from server. Retrying')
+            sleep(1)
+            id = self.request_id()
         return id
 
 
@@ -56,8 +62,15 @@ class Connection:
         self.port = order_port
 
     def connect(self, auth):
-        sock = socket.socket()
-        sock.connect((self.ip, self.port))
+        sock = None
+        while True:
+            try:
+                sock = socket.socket()
+                sock.connect((self.ip, self.port))
+                break
+            except:
+                print('Cannot login, no response from server. Retrying.')
+                sleep(1)
         self.sock = sock
         self.login(auth)
 
@@ -84,6 +97,7 @@ class Connection:
                 # close socket if we have one of problems with data (server problems)
                 self.sock.send(str.encode('Error' + '\n'))
                 self.sock.close()
+
                 # continue
             if not data:
                 break
@@ -99,7 +113,8 @@ class Connection:
                     # we are checking for id in data
                     _ = order['id']
                     # processor function
-                    return process(link)
+                    processor = Processor(link)
+                    return processor.process()
                 except KeyError:
                     # if no id we can't response with result
                     print(
