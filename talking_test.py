@@ -7,18 +7,18 @@ from connection import Connection
 
 class TestTalking:
     def test_handle_not_json(self):
-        conn = Connection('test', config('ORDER_SERVER_IP'), #+ connection
+        conn = Connection('test', config('ORDER_SERVER_IP'),
                           config('ORDER_SERVER_PORT'))
         assert conn.handle('test') == None
 
     def test_handle_no_link(self):
-        conn = Connection('test', config('ORDER_SERVER_IP'), #+ connection
+        conn = Connection('test', config('ORDER_SERVER_IP'),
                           config('ORDER_SERVER_PORT'))
         data = '{"id": "test"}'
         assert conn.handle(data) == None
 
     def test_handle_no_id(self):
-        conn = Connection('test', config('ORDER_SERVER_IP'), #+ connection
+        conn = Connection('test', config('ORDER_SERVER_IP'),
                           config('ORDER_SERVER_PORT'))
         data = '{"link": "test.com"}'
         assert conn.handle(data) == None
@@ -32,7 +32,7 @@ class TestTalking:
         file = config("ID_FILE")
         ip = config("AUTH_SERVER_IP")
         port = config("AUTH_SERVER_PORT")
-        auth = Auth(ip, port, file) #+ auth
+        auth = Auth(ip, port, file)
         try:
             os.remove(file)
         except:
@@ -45,7 +45,7 @@ class TestTalking:
         id = None
         ip = config("AUTH_SERVER_IP")
         port = config("AUTH_SERVER_PORT")
-        auth = Auth(ip, port, file) #+ auth
+        auth = Auth(ip, port, file)
         with open(file, "w") as f:
             f.truncate(0)
             id = auth.auth()
@@ -56,6 +56,6 @@ class TestTalking:
         file = config("ID_FILE")
         ip = config("AUTH_SERVER_IP")
         port = config("AUTH_SERVER_PORT")
-        auth = Auth(ip, port, file) #+ auth
+        auth = Auth(ip, port, file)
         id = auth.auth(False)
         assert isinstance(id, str) and len(id) != 0
