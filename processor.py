@@ -14,6 +14,7 @@ import os
 class Processor:
     def __init__(self, link) -> None:
         self.VIDEO_FILE = config('VIDEO_FILE')
+        self.VIDEO_FOLDER = config('VIDEO_FOLDER')
         self.link = link
         self.understand_service()
 
@@ -43,8 +44,7 @@ class Processor:
         MAX_SIZE = (MAX_SIZE_W, MAX_SIZE_H)
 
         file_count = 0
-        output = "can't resolve symbols"
-        cap = cv2.VideoCapture(fr'video/{self.VIDEO_FILE}')
+            cap = cv2.VideoCapture(fr'{self.VIDEO_FOLDER}/{self.VIDEO_FILE}')
 
         fps = math.floor(cap.get(5))
         ret, frame = cap.read()
@@ -77,8 +77,8 @@ class Processor:
             ret, frame = cap.read()
             print("frame " + str(file_count) + " is done")
         try:
-            os.remove('video/{self.VIDEO_FILE}')
-            os.rmdir("video")
+                os.remove(f'{self.VIDEO_FOLDER}/{self.VIDEO_FILE}')
+                os.rmdir(self.VIDEO_FOLDER)
         except:
             print("Video file or directory not exist or doesn't download.")
 
