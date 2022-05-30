@@ -54,7 +54,7 @@ class Connection:
                 break
 
     # Method for parsing data. it checks if we have all needed information
-    # and runs processor — function that process video with neural engine and returns result.
+    # and runs processor — function that process video with neural engine and returns result..
     def handle(self, data: [str]):
         try:
             order = json.loads(data)

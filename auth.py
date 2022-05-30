@@ -37,7 +37,7 @@ class Auth:
             f.write(self.id)
         return self.id
 
-    # Method to request id from authentication server.
+    # Method to request id from authentication server..
     def request_id(self):
         try:
             response = requests.get('http://' + self.ip + ':' +

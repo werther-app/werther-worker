@@ -11,7 +11,7 @@ import os
 
 
 class Processor:
-    def __init__(self, link) -> None:
+    def __init__(self, link: str) -> None:
         self.VIDEO_FILE = config('VIDEO_FILE')
         self.VIDEO_FOLDER = config('VIDEO_FOLDER')
         self.link = link
