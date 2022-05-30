@@ -45,6 +45,8 @@ class Processor:
 
         file_count = 0
         output = "Can't resolve symbols"
+
+        try:
             cap = cv2.VideoCapture(fr'{self.VIDEO_FOLDER}/{self.VIDEO_FILE}')
 
         fps = math.floor(cap.get(5))
@@ -87,3 +89,8 @@ class Processor:
         cap.release()
         cv2.destroyAllWindows()
         return str_list
+        except:
+            print("Video didn't downloaded")
+            return None
+
+
