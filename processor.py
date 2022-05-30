@@ -15,16 +15,17 @@ class Processor:
     def __init__(self, link) -> None:
         self.VIDEO_FILE = config('VIDEO_FILE')
         self.link = link
-        self.downloader = Downloader()
+        self.understand_service()
 
     def process(self):
-        self.understand_service()
         self.downloader.download(self.link, self.VIDEO_FILE)
         self.analyze()
 
     def understand_service(self):
         if re.compile('(.*)youtu(\.*)be(.*)').match(self.link):
             self.downloader = YoutubeDownloader()
+        else:
+            self.downloader = Downloader()
 
     def analyze(self):
         WINDOW_CASCADE = config('WINDOW_CASCADE')
