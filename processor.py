@@ -44,6 +44,7 @@ class Processor:
         MAX_SIZE = (MAX_SIZE_W, MAX_SIZE_H)
 
         file_count = 0
+        output = "Can't resolve symbols"
             cap = cv2.VideoCapture(fr'{self.VIDEO_FOLDER}/{self.VIDEO_FILE}')
 
         fps = math.floor(cap.get(5))
@@ -66,7 +67,8 @@ class Processor:
                     ret, frame = cap.read()
                     continue
                 for (x, y, w, h) in terminals:
-                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                        cv2.rectangle(frame, (x, y), (x+w, y+h),
+                                      (0, 255, 0), 2)
                     cv2.imshow('terminals', frame)
                     scoped_frame = frame[y:y + h, x:x + w]
                     # using tesseract library to locate and transform image of letter to string
