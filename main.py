@@ -1,6 +1,7 @@
 from decouple import config
 
-from talking import *
+from auth import Auth
+from connection import Connection
 
 
 if __name__ == '__main__':
@@ -10,12 +11,12 @@ if __name__ == '__main__':
     order_port = int(config('ORDER_SERVER_PORT'))
     id_file = config('ID_FILE')
 
-    auth = Auth(auth_ip, auth_port, id_file)
+    auth = Auth(auth_ip, auth_port, id_file) #+ auth
     id = auth.auth()
 
     print(id)
 
-    connection = Connection(id, order_ip, order_port)
+    connection = Connection(id, order_ip, order_port) #+connection
     connection.connect(auth)
 
     connection.listen()
