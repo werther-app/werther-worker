@@ -1,4 +1,5 @@
 from calendar import c
+import math
 import re
 
 from numpy import double
@@ -12,11 +13,13 @@ import os
 
 class Processor:
     def __init__(self, link) -> None:
+        self.VIDEO_FILE = config('VIDEO_FILE')
         self.link = link
         self.downloader = Downloader()
 
     def process(self):
         self.understand_service()
+        self.downloader.download(self.link, self.VIDEO_FILE)
         self.analyze()
 
     def understand_service(self):
@@ -24,7 +27,6 @@ class Processor:
             self.downloader = YoutubeDownloader()
 
     def analyze(self):
-        VIDEO_FILE = config('VIDEO_FILE')
         WINDOW_CASCADE = config('WINDOW_CASCADE')
 
         # Cascade parameters
@@ -39,13 +41,11 @@ class Processor:
         MIN_SIZE = (MIN_SIZE_W, MIN_SIZE_H)
         MAX_SIZE = (MAX_SIZE_W, MAX_SIZE_H)
 
-        self.downloader.download(self.link, VIDEO_FILE)
-
         file_count = 0
         output = "can't resolve symbols"
-        cap = cv2.VideoCapture(fr'{VIDEO_FILE}')
+        cap = cv2.VideoCapture(fr'video/{self.VIDEO_FILE}')
 
-        fps = cap.get(5)
+        fps = math.floor(cap.get(5))
         ret, frame = cap.read()
         terminal_classifier = cv2.CascadeClassifier(WINDOW_CASCADE)
 
@@ -61,11 +61,12 @@ class Processor:
                     gray, SCALE_FACTOR, MIN_NEIGHBORS, FLAGS, MIN_SIZE, MAX_SIZE)
 
                 # skip frames without terminal
-                if terminals == ():
+                if len(terminals) == 0:
+                    ret, frame = cap.read()
                     continue
                 for (x, y, w, h) in terminals:
-                    # cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-                    # cv2.imshow('terminals', frame)
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                    cv2.imshow('terminals', frame)
                     scoped_frame = frame[y:y + h, x:x + w]
                     # using tesseract library to locate and transform image of letter to string
                     output = pytesseract.image_to_string(scoped_frame)
@@ -73,8 +74,9 @@ class Processor:
                         # we append text and deletes every unnecessery space and enters
                         str_list.append(" ".join(output.split()))
             ret, frame = cap.read()
+            print("frame " + str(file_count) + " is done")
         try:
-            os.remove('video/{VIDEO_FILE}')
+            os.remove('video/{self.VIDEO_FILE}')
             os.rmdir("video")
         except:
             print("Video file or directory not exist or doesn't download.")
