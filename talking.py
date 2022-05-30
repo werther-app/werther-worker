@@ -42,7 +42,7 @@ class Auth:
             f.write(self.id)
         return self.id
 
-    # method to request id from authentication server
+    # Method to request id from authentication server.
     def request_id(self):
         try:
             response = requests.get('http://' + self.ip + ':' +
@@ -74,8 +74,8 @@ class Connection:
         self.sock = sock
         self.login(auth)
 
-    # login method sends first data to socket — id of worker
-    # before running login worker needs to be authenticated
+    # Login method sends first data to socket — id of worker.
+    # Before running login worker needs to be authenticated.
     def login(self, auth):
         self.sock.send(str.encode(self.id + '\n'))
         data = self.sock.recv(1024)
@@ -83,9 +83,9 @@ class Connection:
             self.id = auth.auth(False)
             self.login(auth)
 
-    # method that permanently listens for data
+    # Method that permanently listens for data
     # if it receives data, than it passes data to handler and gets result from
-    # next result is checked and send to server
+    # next result is checked and send to server.
     def listen(self):
         while True:
             data = self.sock.recv(1024)
@@ -94,43 +94,43 @@ class Connection:
                 id = json.loads(data)['id']
                 self.send_result(self.sock, id, result)
             else:
-                # close socket if we have one of problems with data (server problems)
+                # Close socket if we have one of problems with data (server problems).
                 self.sock.send(str.encode('Error' + '\n'))
                 self.sock.close()
 
-                # continue
+                # Continue.
             if not data:
                 break
 
-    # method for parsing data. it checks if we have all needed information
-    # and runs processor — function that process video with neural engine and returns result
+    # Method for parsing data. it checks if we have all needed information
+    # and runs processor — function that process video with neural engine and returns result.
     def handle(self, data):
         try:
             order = json.loads(data)
             try:
                 link = order['link']
                 try:
-                    # we are checking for id in data
+                    # We are checking for id in data.
                     _ = order['id']
-                    # processor function
+                    # Processor function.
                     processor = Processor(link)
                     return processor.process()
                 except KeyError:
-                    # if no id we can't response with result
+                    # If no id we can't response with result.
                     print(
                         'No id of order, we can\'t send appropriate response to server without knowing id.')
                     return None
             except KeyError:
-                # if no link, we can't process video
+                # If no link, we can't process video.
                 print('No link in order, we can\'t process order without it\'s link.')
                 return None
         except json.decoder.JSONDecodeError:
-            # if not a json, bad
+            # If not a json, bad.
             print('Problem with parsing request from server.')
             return None
 
-    # this method generates current date and time and result for server
-    # it needs socket where to send, id of order and result of order
+    # This method generates current date and time and result for server.
+    # It needs socket where to send, id of order and result of order.
     def send_result(self, sock, id, result):
         endTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
         str_result = json.dumps(result)
