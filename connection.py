@@ -7,7 +7,7 @@ from processor import Processor
 from auth import Auth
 
 class Connection:
-    def __init__(self, id, order_ip, order_port) -> None:
+    def __init__(self, id: str, order_ip: str, order_port: str) -> None:
         self.id = id
         self.ip = order_ip
         self.port = order_port
@@ -55,7 +55,7 @@ class Connection:
 
     # Method for parsing data. it checks if we have all needed information
     # and runs processor — function that process video with neural engine and returns result.
-    def handle(self, data):
+    def handle(self, data: [str]):
         try:
             order = json.loads(data)
             try:
@@ -82,12 +82,8 @@ class Connection:
 
     # This method generates current date and time and result for server.
     # It needs socket where to send, id of order and result of order.
-    def send_result(self, sock, id, result):
-        endTime = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
+    def send_result(self, sock: socket, id: str, result:[str]):
+        end_time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
         str_result = json.dumps(result)
-        if len(result) != 0:
-            sock.send(str.encode(' {"id": "' + id + '", "result": ' +
-                                 str_result + ', "endTime": "' + endTime + '"}' + '\n'))
-        else:
-            sock.send(str.encode(
-                ' {"id": "' + id + '", "result": [], "endTime": "' + endTime + '"}' + '\n'))
+        sock.send(str.encode(' {"id": "' + id + '", "result": ' +
+                             str_result + ', "endTime": "' + end_time + '"}' + '\n'))

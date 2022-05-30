@@ -4,7 +4,7 @@ import requests
 
 
 class Auth:
-    def __init__(self, auth_ip, auth_port, file) -> None:
+    def __init__(self, auth_ip: str, auth_port: str, file: str) -> None:
         self.ip = auth_ip
         self.port = auth_port
         self.file = file
