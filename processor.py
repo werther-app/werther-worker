@@ -19,7 +19,7 @@ class Processor:
         self.understand_service()
 
     def process(self):
-        self.downloader.download(self.link, self.VIDEO_FILE)
+        self.downloader.download(self.link, self.VIDEO_FILE, self.VIDEO_FOLDER)
         self.analyze()
 
     def understand_service(self):
