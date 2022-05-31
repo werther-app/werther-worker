@@ -1,4 +1,3 @@
-from calendar import c
 import math
 import re
 
@@ -12,7 +11,7 @@ import os
 
 
 class Processor:
-    def __init__(self, link) -> None:
+    def __init__(self, link: str) -> None:
         self.VIDEO_FILE = config('VIDEO_FILE')
         self.VIDEO_FOLDER = config('VIDEO_FOLDER')
         self.link = link
@@ -31,7 +30,7 @@ class Processor:
     def analyze(self):
         WINDOW_CASCADE = config('WINDOW_CASCADE')
 
-        # Cascade parameters
+        # Cascade parameters.
         SCALE_FACTOR = double(config('SCALE_FACTOR'))
         MIN_NEIGHBORS = int(config('MIN_NEIGHBORS'))
         FLAGS = int(config('FLAGS'))
@@ -55,16 +54,16 @@ class Processor:
 
             str_list = []
 
-            # run through every frame of the video while they exist
+            # Run through every frame of the video while they exist.
             while ret:
                 file_count += 1
                 if file_count % fps == 0:
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                    # locate the terminal using cascade, all variables is hard coded due they importance DO NOT CHANGE THEM!
+                    # Locate the terminal using cascade, all variables is hard coded due they importance DO NOT CHANGE THEM.
                     terminals = terminal_classifier.detectMultiScale(
                         gray, SCALE_FACTOR, MIN_NEIGHBORS, FLAGS, MIN_SIZE, MAX_SIZE)
 
-                    # skip frames without terminal
+                    # Skip frames without terminal.
                     if len(terminals) == 0:
                         ret, frame = cap.read()
                         continue
@@ -73,10 +72,10 @@ class Processor:
                                       (0, 255, 0), 2)
                         cv2.imshow('terminals', frame)
                         scoped_frame = frame[y:y + h, x:x + w]
-                        # using tesseract library to locate and transform image of letter to string
+                        # Using tesseract library to locate and transform image of letter to string.
                         output = pytesseract.image_to_string(scoped_frame)
                         if output:
-                            # we append text and deletes every unnecessery space and enters
+                            # We append text and deletes every unnecessery space and enters.
                             str_list.append(" ".join(output.split()))
                 ret, frame = cap.read()
                 print("frame " + str(file_count) + " is done")

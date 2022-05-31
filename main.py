@@ -1,6 +1,7 @@
 from decouple import config
 
-from talking import *
+from auth import Auth
+from connection import Connection
 
 
 if __name__ == '__main__':
