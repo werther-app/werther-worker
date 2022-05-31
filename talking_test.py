@@ -1,7 +1,8 @@
-import os
 from decouple import config
+import os
 
-from talking import *
+from auth import Auth
+from connection import Connection
 
 
 class TestTalking:
@@ -26,7 +27,7 @@ class TestTalking:
     #     data = '{"id": "test", "link": "test.com"}'
     #     assert handle(data) != None
 
-    # auth tests need to be run
+    # Auth tests need to be run.
     def test_auth_no_file(self):
         file = config("ID_FILE")
         ip = config("AUTH_SERVER_IP")
