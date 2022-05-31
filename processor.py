@@ -32,6 +32,8 @@ class Processor:
         WINDOW_CASCADE = config('WINDOW_CASCADE')
 
         # Cascade parameters.
+        #SCALE_FACTOR — Parameter specifying how much the image size is reduced at each image scale.
+        #MIN_NEIGHBOURS — Parameter specifying how many neighbors each candidate rectangle should have to retain it.
         SCALE_FACTOR = double(config('SCALE_FACTOR'))
         MIN_NEIGHBORS = int(config('MIN_NEIGHBORS'))
         FLAGS = int(config('FLAGS'))
