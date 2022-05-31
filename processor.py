@@ -17,17 +17,17 @@ class Processor:
         self.link = link
         self.understand_service()
 
-    def process(self):
+    def process(self) -> list:
         self.downloader.download(self.link, self.VIDEO_FILE, self.VIDEO_FOLDER)
         self.analyze()
 
-    def understand_service(self):
+    def understand_service(self) -> None:
         if re.compile('(.*)youtu(\.*)be(.*)').match(self.link):
             self.downloader = YoutubeDownloader()
         else:
             self.downloader = Downloader()
 
-    def analyze(self):
+    def analyze(self) -> list:
         WINDOW_CASCADE = config('WINDOW_CASCADE')
 
         # Cascade parameters.

@@ -6,13 +6,14 @@ import json
 from processor import Processor
 from auth import Auth
 
+
 class Connection:
     def __init__(self, id: str, order_ip: str, order_port: str) -> None:
         self.id = id
         self.ip = order_ip
         self.port = order_port
 
-    def connect(self, auth):
+    def connect(self, auth: Auth) -> None:
         sock = None
         while True:
             try:
@@ -27,7 +28,7 @@ class Connection:
 
     # Login method sends first data to socket — id of worker.
     # Before running login worker needs to be authenticated.
-    def login(self, auth):
+    def login(self, auth: Auth) -> None:
         self.sock.send(str.encode(self.id + '\n'))
         data = self.sock.recv(1024)
         if data.decode("utf-8") == 'Cannot login, wrong id.':
@@ -37,7 +38,7 @@ class Connection:
     # Method that permanently listens for data
     # if it receives data, than it passes data to handler and gets result from
     # next result is checked and send to server.
-    def listen(self):
+    def listen(self) -> None:
         while True:
             data = self.sock.recv(1024)
             result = self.handle(data)
@@ -46,16 +47,14 @@ class Connection:
                 self.send_result(self.sock, id, result)
             else:
                 # Close socket if we have one of problems with data (server problems).
-                self.sock.send(str.encode('Error' + '\n'))
+                self.sock.send(str.encode(' Error' + '\n'))
                 self.sock.close()
-
-                # Continue.
             if not data:
                 break
 
     # Method for parsing data. it checks if we have all needed information
     # and runs processor — function that process video with neural engine and returns result..
-    def handle(self, data: [str]):
+    def handle(self, data: str) -> list:
         try:
             order = json.loads(data)
             try:
@@ -82,8 +81,9 @@ class Connection:
 
     # This method generates current date and time and result for server.
     # It needs socket where to send, id of order and result of order.
-    def send_result(self, sock: socket, id: str, result:[str]):
+    def send_result(self, sock: socket, id: str, result: list) -> None:
         end_time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
         str_result = json.dumps(result)
-        sock.send(str.encode(' {"id": "' + id + '", "result": ' +
-                             str_result + ', "endTime": "' + end_time + '"}' + '\n'))
+        data = ' {"id": "' + id + '", "result": ' + str_result + \
+            ', "endTime": "' + end_time + '"}' + '\n'
+        sock.send(bytes(data, encoding="utf-8"))

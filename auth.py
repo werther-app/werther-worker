@@ -9,7 +9,7 @@ class Auth:
         self.port = auth_port
         self.file = file
 
-    def auth(self, read=True):
+    def auth(self, read=True) -> str:
         if read == False:
             return self.get_id()
         id = self.read_id()
@@ -19,7 +19,7 @@ class Auth:
             self.id = id
         return self.id
 
-    def read_id(self):
+    def read_id(self) -> str:
         try:
             with open(self.file, "r") as f:
                 # check if file is empty
@@ -31,14 +31,14 @@ class Auth:
         except FileNotFoundError:
             return None
 
-    def get_id(self):
+    def get_id(self) -> str:
         self.id = self.request_id()
         with open(self.file, "w") as f:
             f.write(self.id)
         return self.id
 
     # Method to request id from authentication server..
-    def request_id(self):
+    def request_id(self) -> str:
         try:
             response = requests.get('http://' + self.ip + ':' +
                                     str(self.port) + '/auth?type=worker')
