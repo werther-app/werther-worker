@@ -19,7 +19,8 @@ class Processor:
 
     def process(self) -> list:
         self.downloader.download(self.link, self.VIDEO_FILE, self.VIDEO_FOLDER)
-        self.analyze()
+        result = self.analyze()
+        return result
 
     def understand_service(self) -> None:
         if re.compile('(.*)youtu(\.*)be(.*)').match(self.link):
@@ -81,7 +82,6 @@ class Processor:
                 print("frame " + str(file_count) + " is done")
             try:
                 os.remove(f'{self.VIDEO_FOLDER}/{self.VIDEO_FILE}')
-                os.rmdir(self.VIDEO_FOLDER)
             except:
                 print("Video file or directory not exist or doesn't download.")
 
