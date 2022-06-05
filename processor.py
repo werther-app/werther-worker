@@ -28,12 +28,19 @@ class Processor:
         else:
             self.downloader = Downloader()
 
+    def clean_output(self, output):
+        clear = output
+        clear = " ".join(clear.split())
+        clear = clear.replace('"', '\\"')
+        clear = clear.replace('\'', '\\\'')
+        return clear
+
     def analyze(self) -> list:
         WINDOW_CASCADE = config('WINDOW_CASCADE')
 
         # Cascade parameters.
-        #SCALE_FACTOR — Parameter specifying how much the image size is reduced at each image scale.
-        #MIN_NEIGHBOURS — Parameter specifying how many neighbors each candidate rectangle should have to retain it.
+        # SCALE_FACTOR — Parameter specifying how much the image size is reduced at each image scale.
+        # MIN_NEIGHBOURS — Parameter specifying how many neighbors each candidate rectangle should have to retain it.
         SCALE_FACTOR = double(config('SCALE_FACTOR'))
         MIN_NEIGHBORS = int(config('MIN_NEIGHBORS'))
         FLAGS = int(config('FLAGS'))
@@ -71,25 +78,24 @@ class Processor:
                         ret, frame = cap.read()
                         continue
                     for (x, y, w, h) in terminals:
-                        cv2.rectangle(frame, (x, y), (x+w, y+h),
-                                      (0, 255, 0), 2)
-                        cv2.imshow('terminals', frame)
                         scoped_frame = frame[y:y + h, x:x + w]
                         # Using tesseract library to locate and transform image of letter to string.
                         output = pytesseract.image_to_string(scoped_frame)
                         if output:
                             # We append text and deletes every unnecessery space and enters.
-                            str_list.append(" ".join(output.split()))
+                            clear = self.clean_output(output)
+                            str_list.append(clear)
                 ret, frame = cap.read()
                 print("frame " + str(file_count) + " is done")
             try:
                 os.remove(f'{self.VIDEO_FOLDER}/{self.VIDEO_FILE}')
-            except:
-                print("Video file or directory not exist or doesn't download.")
+            except OSError:
+                pass
 
             cap.release()
             cv2.destroyAllWindows()
             return str_list
-        except:
+        except Exception as e:
             print("Video didn't downloaded")
+            print(e)
             return None
