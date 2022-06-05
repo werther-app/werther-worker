@@ -28,6 +28,13 @@ class Processor:
         else:
             self.downloader = Downloader()
 
+    def clean_output(self, output):
+        clear = output
+        clear = " ".join(clear.split())
+        clear = clear.replace('"', '\\"')
+        clear = clear.replace('\'', '\\\'')
+        return clear
+
     def analyze(self) -> list:
         WINDOW_CASCADE = config('WINDOW_CASCADE')
 
@@ -77,7 +84,8 @@ class Processor:
                         output = pytesseract.image_to_string(scoped_frame)
                         if output:
                             # We append text and deletes every unnecessery space and enters.
-                            str_list.append(" ".join(output.split()))
+                            clear = self.clean_output(output)
+                            str_list.append(clear)
                 ret, frame = cap.read()
                 print("frame " + str(file_count) + " is done")
             try:
