@@ -76,9 +76,6 @@ class Processor:
                         ret, frame = cap.read()
                         continue
                     for (x, y, w, h) in terminals:
-                        cv2.rectangle(frame, (x, y), (x+w, y+h),
-                                      (0, 255, 0), 2)
-                        cv2.imshow('terminals', frame)
                         scoped_frame = frame[y:y + h, x:x + w]
                         # Using tesseract library to locate and transform image of letter to string.
                         output = pytesseract.image_to_string(scoped_frame)
