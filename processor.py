@@ -82,12 +82,13 @@ class Processor:
                 print("frame " + str(file_count) + " is done")
             try:
                 os.remove(f'{self.VIDEO_FOLDER}/{self.VIDEO_FILE}')
-            except:
-                print("Video file or directory not exist or doesn't download.")
+            except OSError:
+                pass
 
             cap.release()
             cv2.destroyAllWindows()
             return str_list
-        except:
+        except Exception as e:
             print("Video didn't downloaded")
+            print(e)
             return None
